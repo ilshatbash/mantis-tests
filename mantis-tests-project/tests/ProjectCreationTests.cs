@@ -15,10 +15,11 @@ namespace mantis_tests_project
         [Test]
         public void ProjectCreateTest()
         {
+            AccountData account = new AccountData("administrator", "root");
             ProjectData project = new ProjectData(GenerateRandomString(30));
-            List<ProjectData> oldProjects = app.Projects.GetProjectsList();
+            List<ProjectData> oldProjects = app.Projects.GetProjectsList(account);
             app.Projects.Create(project);
-            List<ProjectData> newProjects = app.Projects.GetProjectsList();
+            List<ProjectData> newProjects = app.Projects.GetProjectsList(account);
             oldProjects.Add(project);
             oldProjects.Sort();
             newProjects.Sort();

@@ -13,17 +13,23 @@ namespace mantis_tests_project
         public ProjectHelper(ApplicationManager manager) : base(manager) {}
 
         
-            public List<ProjectData> GetProjectsList()
+            public List<ProjectData> GetProjectsList(AccountData account)
             {
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            Mantis.ProjectData[] projectsm = client.mc_projects_get_user_accessible(account.Name, account.Password);
+
             List<ProjectData> projects = new List<ProjectData>();
-            manager.Navigator.GoToProjectPage();
-            ICollection<IWebElement> elements = driver.FindElements
-                (By.XPath("//i[@class='fa fa-puzzle-piece ace-icon']/../../..//tbody//tr"));
-            foreach (IWebElement element in elements)
+            // manager.Navigator.GoToProjectPage();
+            //ICollection<IWebElement> elements = driver.FindElements
+            //  (By.XPath("//i[@class='fa fa-puzzle-piece ace-icon']/../../..//tbody//tr"));
+            //foreach (IWebElement element in elements)
+            foreach (var projectm in projectsm)
             {
-                IWebElement cells = element.FindElements(By.TagName("td")).FirstOrDefault();
-                ProjectData project = new ProjectData(cells.Text);
-                projects.Add(project);     
+                //  IWebElement cells = element.FindElements(By.TagName("td")).FirstOrDefault();
+                //  ProjectData project = new ProjectData(cells.Text);
+                //  projects.Add(project);     
+                ProjectData project = new ProjectData(projectm.name);
+                projects.Add(project);
             }
             return projects;
         }
@@ -41,11 +47,7 @@ namespace mantis_tests_project
             driver.FindElement(By.XPath("//input[@value='Удалить проект']")).Click();
         }
 
-        private void ReturnToProjectsPage()
-        {
-            throw new NotImplementedException();
-        }
-
+      
         private void SelectProject(int index)
         {
             driver.FindElement(By.XPath("//i[@class='fa fa-puzzle-piece ace-icon']/../../..//tbody//tr[" + (index +1)+ "]/td[1]/a")).Click();
@@ -59,6 +61,14 @@ namespace mantis_tests_project
             SubmitProjectCreation();
             ReturnToProjectPage();
  
+        }
+
+        public void CreateMantis(ProjectData project, AccountData account)
+        {
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            Mantis.ProjectData projectData = new Mantis.ProjectData() { name = project.Name };
+            client.mc_project_add(account.Name, account.Password, projectData);
+
         }
 
         private void ReturnToProjectPage()
@@ -80,11 +90,11 @@ namespace mantis_tests_project
         {
             driver.FindElement(By.XPath("//button[@class='btn btn-primary btn-white btn-round']")).Click();
         }
-        public bool IsProjectIn()
+        public bool IsProjectIn(AccountData account)
         {
-            manager.Navigator.GoToProjectPage();
-            bool i = IsElementPresent(By.XPath("//i[@class='fa fa-puzzle-piece ace-icon']/../../..//tbody//tr"));
-            return i;
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            Mantis.ProjectData[] projectsm = client.mc_projects_get_user_accessible(account.Name, account.Password);
+            return projectsm != null && projectsm.Length > 0;
         }
     }
     }
