@@ -23,6 +23,7 @@ namespace mantis_tests_project
         }
     
         protected string baseURL;
+        protected string mantisVersion;
         protected LoginHelper loginHelper;
         protected NavigationHelper navigator;
         protected ProjectHelper projects;
@@ -32,9 +33,11 @@ namespace mantis_tests_project
         private ApplicationManager()
         {
             driver = new FirefoxDriver();
-            baseURL = "http://localhost/mantisbt-2.25.3";
+            
+            baseURL = "http://localhost/mantisbt-";
+            mantisVersion = "2.25.3";
             loginHelper = new LoginHelper(this);
-            navigator = new NavigationHelper(this, baseURL);
+            navigator = new NavigationHelper(this, baseURL, mantisVersion);
             projects = new ProjectHelper(this);
         }
         ~ApplicationManager()

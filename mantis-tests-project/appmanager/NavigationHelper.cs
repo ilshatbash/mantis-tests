@@ -12,28 +12,34 @@ namespace mantis_tests_project
    public class NavigationHelper : HelperBase
     {
         private string baseURL;
-        public NavigationHelper(ApplicationManager manager, string baseURL) : base(manager)
+        private string mantisVersion;
+        public NavigationHelper(ApplicationManager manager, string baseURL, string mantisVersion) : base(manager)
         {
             this.baseURL = baseURL;
+            this.mantisVersion = mantisVersion;
+
+
         }
         public void OpenHomePage()
         {
-            if(driver.Url == baseURL)
+            if(driver.Url == baseURL+ mantisVersion)
             {
                 return;
             }
-            driver.Navigate().GoToUrl(baseURL);
+            driver.Navigate().GoToUrl(baseURL + mantisVersion);
         }
 
         public void GoToProjectPage()
         {
-            if (driver.Url == baseURL + "/manage_proj_page.php"
+            if (driver.Url == baseURL + mantisVersion+ "/manage_proj_page.php"
                 && IsElementPresent(By.XPath("//button[@class='btn btn-primary btn-white btn-round']")))
             {
                 return;
             }
             driver.FindElement(By.CssSelector("i.fa-gears")).Click();
-            driver.FindElement(By.CssSelector("a[href='/mantisbt-2.25.3/manage_proj_page.php']")).Click();
+            driver.FindElement(By.CssSelector("a[href='/mantisbt-"+mantisVersion+"/manage_proj_page.php']")).Click();
+          
+
         }
     }
 }
