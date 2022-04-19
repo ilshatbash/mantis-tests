@@ -10,6 +10,7 @@ namespace mantis_tests_project
     [TestFixture]
     public class ProjectRemovalTests : AuthTestBase
     {
+
         [Test]
         public void ProjectRemoveTest()
         {
