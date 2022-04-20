@@ -15,23 +15,18 @@ namespace mantis_tests_project
         
             public List<ProjectData> GetProjectsList(AccountData account)
             {
+            List<ProjectData> projectList = new List<ProjectData>();
             Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
-            Mantis.ProjectData[] projectsm = client.mc_projects_get_user_accessible(account.Name, account.Password);
-
-            List<ProjectData> projects = new List<ProjectData>();
-            // manager.Navigator.GoToProjectPage();
-            //ICollection<IWebElement> elements = driver.FindElements
-            //  (By.XPath("//i[@class='fa fa-puzzle-piece ace-icon']/../../..//tbody//tr"));
-            //foreach (IWebElement element in elements)
-            foreach (var projectm in projectsm)
+            Mantis.ProjectData[] apiProjects = client.mc_projects_get_user_accessible(account.Name, account.Password);
+            foreach (Mantis.ProjectData project in apiProjects)
             {
-                //  IWebElement cells = element.FindElements(By.TagName("td")).FirstOrDefault();
-                //  ProjectData project = new ProjectData(cells.Text);
-                //  projects.Add(project);     
-                ProjectData project = new ProjectData(projectm.name);
-                projects.Add(project);
+                projectList.Add(new ProjectData(project.name)
+                {
+                    Description = project.description,
+                    Id = project.id
+                });
             }
-            return projects;
+            return new List<ProjectData>(projectList);
         }
 
         public void Remove(int index)
@@ -39,6 +34,11 @@ namespace mantis_tests_project
             manager.Navigator.GoToProjectPage();
             SelectProject(index);
             RemoveProject();
+        }
+        public void RemoveMantis(AccountData account, ProjectData project)
+        {
+            Mantis.MantisConnectPortTypeClient client = new Mantis.MantisConnectPortTypeClient();
+            client.mc_project_delete(account.Name, account.Password, project.Id);
         }
 
         private void RemoveProject()

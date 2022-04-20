@@ -21,8 +21,10 @@ namespace mantis_tests_project
                 app.Projects.CreateMantis(proj, account);
             }
             List<ProjectData> oldProjects = app.Projects.GetProjectsList(account);
-            app.Projects.Remove(0);
+            ProjectData toBeRemoved = oldProjects[0];
+            app.Projects.RemoveMantis(account, toBeRemoved);
             List<ProjectData> newProjects = app.Projects.GetProjectsList(account);
+            Assert.AreEqual(oldProjects.Count - 1, newProjects.Count());
             oldProjects.RemoveAt(0);
             oldProjects.Sort();
             newProjects.Sort();

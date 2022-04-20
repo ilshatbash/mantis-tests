@@ -18,12 +18,14 @@ namespace mantis_tests_project
             AccountData account = new AccountData("administrator", "root");
             ProjectData project = new ProjectData(GenerateRandomString(30));
             List<ProjectData> oldProjects = app.Projects.GetProjectsList(account);
-            app.Projects.Create(project);
+            app.Projects.CreateMantis( project, account);
             List<ProjectData> newProjects = app.Projects.GetProjectsList(account);
+            Assert.AreEqual(oldProjects.Count + 1, newProjects.Count);
             oldProjects.Add(project);
             oldProjects.Sort();
             newProjects.Sort();
             Assert.AreEqual(oldProjects,newProjects);
+  
         }
     }
 }
